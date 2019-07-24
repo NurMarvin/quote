@@ -12,7 +12,17 @@ Number.prototype.padLeft = function (base, chr) {
 }
 
 function escapeMarkdown(text) {
-	text.replace(/\\(\*|_|`|~|\\)/g, "$1").replace(/(\*|_|`|~|\\)/g, "\\$1");
+	text = text.replace(/\\(\*|_|`|~|\\)/g, "$1").replace(/(\*|_|`|~|\\)/g, "\\$1")
+	text = escapeMentions(text)
+	return text
+}
+
+function fixEmojis(text) {
+	return text.replace(/<a?:(\w+):\d+>/g, ":$1:")
+}
+
+function escapeMentions(text) {
+	return text.replace(/@/g, "@​")
 }
 
 module.exports = class Quote extends Plugin {
@@ -43,6 +53,7 @@ module.exports = class Quote extends Plugin {
 									alt: "Quote",
 									className: "quote-btn",
 									onClick: () => {
+										e.message.content = escapeMentions(fixEmojis(e.message.content))
 										let contentLines = e.message.content.split("\n")
 										
 										let timestamp = e.message.timestamp
