@@ -2,7 +2,7 @@ const { resolve } = require("path")
 const { Plugin } = require("powercord/entities")
 const { forceUpdateElement, getOwnerInstance } = require("powercord/util")
 const { inject, uninject } = require("powercord/injector")
-const { React, getModuleByDisplayName } = require("powercord/webpack")
+const { React, getModule, getModuleByDisplayName } = require("powercord/webpack")
 
 const Settings = require("./components/Settings")
 
@@ -13,28 +13,32 @@ Number.prototype.padLeft = function (base, chr) {
 
 function escapeMarkdown(text) {
 	text = text.replace(/\\(\*|_|`|~|\\)/g, "$1").replace(/(\*|_|`|~|\\)/g, "\\$1")
-	text = escapeMentions(text)
 	return text
 }
 
-function fixEmojis(text) {
-	return text.replace(/<a?:(\w+):\d+>/g, ":$1:")
-}
-
-function escapeMentions(text) {
-	return text.replace(/@/g, "@​")
+function fixContent(text) {
+	return text.replace(/<a?:(\w+):\d+>/g, ":$1:").replace(/(https?:\/\/\S+)/g, "<$1>")
 }
 
 module.exports = class Quote extends Plugin {
+	escapeMentions(text) {
+		return text.replace(/<@!?(\d+)>/g, (_, userID) => {
+			return "@​"+this.getUser(userID).tag
+		})
+	}
+
 	async startPlugin () {
 		this.loadCSS(resolve(__dirname, "style.css"))
 		this.registerSettings("quote", "Quote", Settings)
 		
 		const MessageContent = await getModuleByDisplayName("MessageContent")
+		this.getUser = (await getModule(["getUser"])).getUser
 		
 		const getSettings = (key, defaultValue) => {
 			return this.settings.get(key, defaultValue)
 		}
+
+		const _this = this
 
 		inject(
 			"quote-contents",
@@ -53,14 +57,14 @@ module.exports = class Quote extends Plugin {
 									alt: "Quote",
 									className: "quote-btn",
 									onClick: () => {
-										e.message.content = escapeMentions(fixEmojis(e.message.content))
+										e.message.content = _this.escapeMentions(fixContent(e.message.content))
 										let contentLines = e.message.content.split("\n")
 										
 										let timestamp = e.message.timestamp
 										let displayTime = timestamp.format("LT")
 										let isoDate = timestamp.format("YYYY-MM-DD")
-										let displayName = escapeMarkdown(e.message.nick || e.message.author.username || e.message.author.id)
-										let tag = escapeMarkdown(e.message.author.username+"#"+e.message.author.discriminator)
+										let displayName = _this.escapeMentions(escapeMarkdown(e.message.nick || e.message.author.username || e.message.author.id))
+										let tag = _this.escapeMentions(escapeMarkdown(e.message.author.username+"#"+e.message.author.discriminator))
 
 										let format = getSettings("format", "[auto]")
 
@@ -82,7 +86,7 @@ module.exports = class Quote extends Plugin {
 											displayName
 										)
 										.replace("[userID]", e.message.author.id)
-										.replace("[username]", escapeMarkdown(e.message.author.username))
+										.replace("[username]", _this.escapeMentions(escapeMarkdown(e.message.author.username)))
 										.replace(
 											"[userDiscriminator]",
 											e.message.author.discriminator
@@ -93,7 +97,7 @@ module.exports = class Quote extends Plugin {
 										)
 										.replace("[channelMention]", `#${e.channel.name}`)
 										.replace("[channelID]", e.channel.id)
-										.replace("[channelName]", escapeMarkdown(e.channel.name))
+										.replace("[channelName]", _this.escapeMentions(escapeMarkdown(e.channel.name)))
 										.replace("[message]", contentLines.map(line => `>${line}\n`).join(""))
 										.replace("[messageTime]", timestamp)
 										.replace("[messageDate]", isoDate)
