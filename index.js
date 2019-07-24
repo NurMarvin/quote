@@ -4,21 +4,21 @@ const { forceUpdateElement, getOwnerInstance } = require("powercord/util")
 const { inject, uninject } = require("powercord/injector")
 const { React, getModuleByDisplayName } = require("powercord/webpack")
 
-const Settings = require('./components/Settings')
+const Settings = require("./components/Settings")
 
 Number.prototype.padLeft = function (base, chr) {
   var len = String(base || 10).length - String(this).length + 1
-  return len > 0 ? new Array(len).join(chr || '0') + this : this
+  return len > 0 ? new Array(len).join(chr || "0") + this : this
 }
 
 function escapeMarkdown(text) {
-	text.replace(/\\(\*|_|`|~|\\)/g, '$1').replace(/(\*|_|`|~|\\)/g, '\\$1');
+	text.replace(/\\(\*|_|`|~|\\)/g, "$1").replace(/(\*|_|`|~|\\)/g, "\\$1");
 }
 
 module.exports = class Quote extends Plugin {
 	async startPlugin () {
 		this.loadCSS(resolve(__dirname, "style.css"))
-		this.registerSettings('quote', 'Quote', Settings)
+		this.registerSettings("quote", "Quote", Settings)
 		
 		const MessageContent = await getModuleByDisplayName("MessageContent")
 		
@@ -51,7 +51,7 @@ module.exports = class Quote extends Plugin {
 										let displayName = escapeMarkdown(e.message.nick || e.message.author.username || e.message.author.id)
 										let tag = escapeMarkdown(e.message.author.username+"#"+e.message.author.discriminator)
 
-										let format = getSettings('format', '[auto]')
+										let format = getSettings("format", "[auto]")
 
 										if (contentLines.length == 1) {
 											var quotedMessage = `> [${displayTime}] ${displayName}: ${e.message.content}\n`
@@ -63,30 +63,30 @@ module.exports = class Quote extends Plugin {
 
 										let message = format
 										.replace(
-											'[userMention]',
+											"[userMention]",
 											"@"+tag
 										)
 										.replace(
-											'[userDisplayName]',
+											"[userDisplayName]",
 											displayName
 										)
-										.replace('[userID]', e.message.author.id)
-										.replace('[username]', escapeMarkdown(e.message.author.username))
+										.replace("[userID]", e.message.author.id)
+										.replace("[username]", escapeMarkdown(e.message.author.username))
 										.replace(
-											'[userDiscriminator]',
+											"[userDiscriminator]",
 											e.message.author.discriminator
 										)
 										.replace(
-											'[userTag]',
+											"[userTag]",
 											tag
 										)
-										.replace('[channelMention]', `#${e.channel.name}`)
-										.replace('[channelID]', e.channel.id)
-										.replace('[channelName]', escapeMarkdown(e.channel.name))
-										.replace('[message]', contentLines.map(line => `>${line}\n`).join(""))
-										.replace('[messageTime]', timestamp)
-										.replace('[messageDate]', isoDate)
-										.replace('[auto]', quotedMessage)
+										.replace("[channelMention]", `#${e.channel.name}`)
+										.replace("[channelID]", e.channel.id)
+										.replace("[channelName]", escapeMarkdown(e.channel.name))
+										.replace("[message]", contentLines.map(line => `>${line}\n`).join(""))
+										.replace("[messageTime]", timestamp)
+										.replace("[messageDate]", isoDate)
+										.replace("[auto]", quotedMessage)
 										
 										let chatbox = document.querySelector("textarea.textArea-2Spzkt.scrollbar-3dvm_9")
 										

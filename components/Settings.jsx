@@ -1,7 +1,7 @@
-const { React } = require('powercord/webpack')
-const { SwitchItem } = require('powercord/components/settings')
+const { React } = require("powercord/webpack")
+const { SwitchItem } = require("powercord/components/settings")
 
-const TextArea = require('./TextArea')
+const TextArea = require("./TextArea")
 
 module.exports = class QuoteSettings extends React.Component {
 	constructor() {
@@ -33,11 +33,11 @@ module.exports = class QuoteSettings extends React.Component {
 						</div>
 					}
 					value={this.props.getSetting(
-						'format',
-						'[auto]'
+						"format",
+						"[auto]"
 					)}
 					rows={6}
-					onChange={val => this.props.updateSetting('format', val)}
+					onChange={val => this.props.updateSetting("format", val)}
 				>
 					Quote Message Format
 				</TextArea>
@@ -48,13 +48,13 @@ module.exports = class QuoteSettings extends React.Component {
 					note={
 						<div>
 						{
-							'Should a new line be appended at the end of the above designed message? '
+							"Should a new line be appended at the end of the above designed message? "
 						}
 						<b>(RECOMMENDED)</b>
 						</div>
 					}
-					value={this.props.getSetting('appendNewLine', true)}
-					onChange={() => this.props.toggleSetting('appendNewLine')}
+					value={this.props.getSetting("appendNewLine", true)}
+					onChange={() => this.props.toggleSetting("appendNewLine")}
 					>
 					Append New Line
 					</SwitchItem> */
