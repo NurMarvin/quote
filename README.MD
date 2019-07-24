@@ -14,7 +14,7 @@ You can configure the quote format in your user settings under the `Quote` setti
 
 ### Community provided custom formats
 ```
->**[username]** • [messageDate] [messageTime]• #[channelName]
+>**[username]** • [messageDate] [messageTime] • #[channelName]
 [message]
 ```
 by .intrnl#6380
