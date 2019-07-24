@@ -11,6 +11,10 @@ Number.prototype.padLeft = function (base, chr) {
   return len > 0 ? new Array(len).join(chr || '0') + this : this
 }
 
+function escapeMarkdown(text) {
+	text.replace(/\\(\*|_|`|~|\\)/g, '$1').replace(/(\*|_|`|~|\\)/g, '\\$1');
+}
+
 module.exports = class Quote extends Plugin {
 	async startPlugin () {
 		this.loadCSS(resolve(__dirname, "style.css"))
@@ -41,60 +45,56 @@ module.exports = class Quote extends Plugin {
 									onClick: () => {
 										let contentLines = e.message.content.split("\n")
 										
-										let displayName = e.message.nick || e.message.author.username || e.message.author.id
 										let timestamp = e.message.timestamp
 										let displayTime = timestamp.format("LT")
 										let isoDate = timestamp.format("YYYY-MM-DD")
+										let displayName = escapeMarkdown(e.message.nick || e.message.author.username || e.message.author.id)
+										let tag = escapeMarkdown(e.message.author.username+"#"+e.message.author.discriminator)
 
-										let format = getSettings('format', '{message}')
+										let format = getSettings('format', '[auto]')
 
-										let quotedMessage = format
-										.replace(
-											'{userMention}',
-											`@${e.message.author.username}#${
-											e.message.author.discriminator
-											}`
-										)
-										.replace(
-											'{userDisplayName}',
-											e.message.nick || e.message.author.username || e.message.author.id
-											? e.message.nick
-											: e.message.author.username
-										)
-										.replace('{userID}', e.message.author.id)
-										.replace('{username}', e.message.author.username)
-										.replace(
-											'{userDiscriminator}',
-											e.message.author.discriminator
-										)
-										.replace(
-											'{userTag}',
-											`${e.message.author.username}#${
-											e.message.author.discriminator
-											}`
-										)
-										.replace('{channelMention}', `#${e.channel.name}`)
-										.replace('{channelId}', e.channel.id)
-										.replace('{channelName}', e.channel.name)
-										.replace('{message}', quotedMessage)
-										.replace('{messageTime}', timestamp)
-										.replace('{messageDate}', isoDate)
-
-										/*if (contentLines.length == 1) {
+										if (contentLines.length == 1) {
 											var quotedMessage = `> [${displayTime}] ${displayName}: ${e.message.content}\n`
 										} else {
 											var quotedMessage =
-												`> *${displayName} at ${displayTime}​:*\n`
+												`>*${displayName} at ${displayTime}​:*\n`
 												+contentLines.map(line => `> ${line}\n`).join("")
-										}*/
+										}
+
+										let message = format
+										.replace(
+											'[userMention]',
+											"@"+tag
+										)
+										.replace(
+											'[userDisplayName]',
+											displayName
+										)
+										.replace('[userID]', e.message.author.id)
+										.replace('[username]', escapeMarkdown(e.message.author.username))
+										.replace(
+											'[userDiscriminator]',
+											e.message.author.discriminator
+										)
+										.replace(
+											'[userTag]',
+											tag
+										)
+										.replace('[channelMention]', `#${e.channel.name}`)
+										.replace('[channelID]', e.channel.id)
+										.replace('[channelName]', escapeMarkdown(e.channel.name))
+										.replace('[message]', contentLines.map(line => `>${line}\n`).join(""))
+										.replace('[messageTime]', timestamp)
+										.replace('[messageDate]', isoDate)
+										.replace('[auto]', quotedMessage)
 										
 										let chatbox = document.querySelector("textarea.textArea-2Spzkt.scrollbar-3dvm_9")
 										
 										if (chatbox) {
 											if (chatbox.value !== "") {
-												chatbox.value = quotedMessage + chatbox.value
+												chatbox.value = message + chatbox.value
 											} else {
-												chatbox.value = quotedMessage
+												chatbox.value = message
 											}
 											
 											getOwnerInstance(chatbox).handleChange({currentTarget: chatbox})

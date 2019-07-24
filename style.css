@@ -1,17 +1,17 @@
 .quote-btn {
-  cursor: pointer;
-  height: 1rem;
-  margin-left: 6px;
-  margin-right: 0;
-  opacity: 0.4;
-  transition: opacity 0.2s ease;
-  width: 1rem;
+	cursor: pointer;
+	height: 1rem;
+	margin-left: 6px;
+	margin-right: 0;
+	opacity: 0.4;
+	transition: opacity 0.2s ease;
+	width: 1rem;
 }
 
 .theme-dark .quote-btn {
-  filter: invert(0.62);
+	filter: invert(0.62);
 }
 
 .quote-btn:hover {
-  opacity: 1;
+	opacity: 1;
 }
