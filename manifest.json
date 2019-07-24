@@ -1,8 +1,8 @@
 {
     "name": "Quick Quote",
     "version": "1.0.0",
-    "description": "Adds a quote button next to the add reaction button on each message",
+    "description": "Adds a quote button to quickly quote messages next to the add reaction button on each message",
     "author": "NurMarvin",
-    "license": "MIT"
+    "license": "UNLICENSE"
   }
   
