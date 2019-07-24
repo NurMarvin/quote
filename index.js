@@ -64,10 +64,6 @@ module.exports = class Quote extends Plugin {
 										e.message.content = _this.escapeMentions(fixContent(e.message.content))
 										let contentLines = e.message.content.split("\n")
 										
-										console.log(e)
-
-										
-
 										let guildID = e.channel.guild_id;
 										let channelID = e.channel.id;
 										let messageID = e.message.id;
