@@ -4,11 +4,23 @@ const { forceUpdateElement } = require('powercord/util')
 const { inject, uninject } = require('powercord/injector')
 const { React, getModuleByDisplayName } = require('powercord/webpack')
 
+const Settings = require('./components/Settings')
+
+Number.prototype.padLeft = function (base, chr) {
+  var len = String(base || 10).length - String(this).length + 1
+  return len > 0 ? new Array(len).join(chr || '0') + this : this
+}
+
 module.exports = class Quote extends Plugin {
   async startPlugin () {
     this.loadCSS(resolve(__dirname, 'style.css'))
+    this.registerSettings('quote', 'Quote', Settings)
 
     const MessageContent = await getModuleByDisplayName('MessageContent')
+
+    const getSettings = (key, defaultValue) => {
+      return this.settings.get(key, defaultValue)
+    }
 
     inject(
       'quote-contents',
@@ -31,9 +43,56 @@ module.exports = class Quote extends Plugin {
 
                     var quotedMessage = ''
 
-                    for (var line of contentLines) {
-                      quotedMessage += `>${line}\n`
+                    for (var i = 0; i < contentLines.length; i++) {
+                      quotedMessage += `>${contentLines[i]}\n`
                     }
+
+                    var format = getSettings('format', '{message}')
+                    var timestamp = new Date(e.message.timestamp)
+
+                    var timeFormat = [
+                      timestamp.getHours().padLeft(),
+                      timestamp.getMinutes().padLeft(),
+                      timestamp.getSeconds().padLeft()
+                    ].join(':')
+
+                    var dateFormat = [
+                      timestamp.getDate().padLeft(),
+                      (timestamp.getMonth() + 1).padLeft(),
+                      timestamp.getFullYear()
+                    ].join('/')
+
+                    var message = format
+                      .replace(
+                        '{userMention}',
+                        `@${e.message.author.username}#${
+                          e.message.author.discriminator
+                        }`
+                      )
+                      .replace(
+                        '{userNick}',
+                        e.message.nick
+                          ? e.message.nick
+                          : e.message.author.username
+                      )
+                      .replace('{userId}', e.message.author.id)
+                      .replace('{userName}', e.message.author.username)
+                      .replace(
+                        '{userDiscriminator}',
+                        e.message.author.discriminator
+                      )
+                      .replace(
+                        '{userDiscordTag}',
+                        `${e.message.author.username}#${
+                          e.message.author.discriminator
+                        }`
+                      )
+                      .replace('{channelMention}', `#${e.channel.name}`)
+                      .replace('{channelId}', e.channel.id)
+                      .replace('{channelName}', e.channel.name)
+                      .replace('{message}', quotedMessage)
+                      .replace('{messageTimestampDate}', dateFormat)
+                      .replace('{messageTimestampTime}', timeFormat)
 
                     // TODO: Find a better solution than this because this is awfully done, please no bully
                     var classes = 'pc-textArea pc-scrollbar'.split(' ')
@@ -57,11 +116,7 @@ module.exports = class Quote extends Plugin {
                       if (correct) break
                     }
 
-                    if (chatbox.value !== '') {
-                      chatbox.value += '\n' + quotedMessage
-                    } else {
-                      chatbox.value = quotedMessage
-                    }
+                    chatbox.value = message
 
                     chatbox.style.height = `${chatbox.value.split('\n').length *
                       20}px`
@@ -79,7 +134,7 @@ module.exports = class Quote extends Plugin {
   }
 
   pluginWillUnload () {
-    uninject('star-contents')
+    uninject('quote-contents')
     forceUpdateElement('.pc-message', true)
   }
 }
