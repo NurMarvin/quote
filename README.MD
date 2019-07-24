@@ -2,7 +2,7 @@
 A Powercord plugin that adds a quote button to quickly quote messages next to the add reaction button on each message
 
 ### Demo
-![Demo](https://axolotl.club/KJkjUNTG.gif?key=HailTheAxolotlvZYyaM5)
+![Demo](https://axolotl.club/B89Xdzij.gif?key=HailTheAxolotlwMRSLyV)
 
 ### Installation
 1. Clone this repository into your Powercord plugins folder using `git clone https://github.com/NurMarvin/quote.git`
