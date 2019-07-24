@@ -17,7 +17,7 @@ You can configure the quote format in your user settings under the `Quote` setti
 >**[username]** • [messageDate] [messageTime] • #[channelName]
 [message]
 ```
-by .intrnl#6380
+by .intrnl#6380 \
 Instead of `#[channelName]` you can also use `<#[channelID]>` which will mention channels even if you put the quote on another server but is by no means neccessary.
 
 If you have a custom format that you want featured on here, feel free to message me on Discord @ NurMarvin#1641 
