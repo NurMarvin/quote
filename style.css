@@ -8,6 +8,10 @@
   width: 1rem;
 }
 
+.theme-dark .quote-btn {
+  filter: invert(0.62);
+}
+
 .quote-btn:hover {
   opacity: 1;
 }
