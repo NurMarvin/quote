@@ -28,6 +28,7 @@ module.exports = class QuoteSettings extends React.Component {
 								[message] - The quoted message<br></br>
 								[messageDate] - The date when the quoted message was posted<br></br>
 								[messageTime] - The time when the quoted message was posted<br></br>
+								[messageTimestamp] - The timestamp (unformatted date and time) when the quoted message was posted<br></br>
 								[auto] - Insert something pretty
 							</p>
 						</div>

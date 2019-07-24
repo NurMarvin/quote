@@ -11,3 +11,13 @@ A Powercord plugin that adds a quote button to quickly quote messages next to th
 
 ### Configuration
 You can configure the quote format in your user settings under the `Quote` settings tab
+
+### Community provided custom formats
+```
+>**[username]** • [messageDate] [messageTime]• #[channelName]
+[message]
+```
+by .intrnl#6380
+Instead of `#[channelName]` you can also use `<#[channelID]>` which will mention channels even if you put the quote on another server but is by no means neccessary.
+
+If you have a custom format that you want featured on here, feel free to message me on Discord @ NurMarvin#1641 

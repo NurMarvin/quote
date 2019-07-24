@@ -6,6 +6,10 @@ const { React, getModule, getModuleByDisplayName } = require("powercord/webpack"
 
 const Settings = require("./components/Settings")
 
+const monthNames = ["January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December"
+];
+
 Number.prototype.padLeft = function (base, chr) {
   var len = String(base || 10).length - String(this).length + 1
   return len > 0 ? new Array(len).join(chr || "0") + this : this
@@ -62,7 +66,8 @@ module.exports = class Quote extends Plugin {
 										
 										let timestamp = e.message.timestamp
 										let displayTime = timestamp.format("LT")
-										let isoDate = timestamp.format("YYYY-MM-DD")
+										let date = new Date(timestamp)
+										let datePretty = monthNames[date.getMonth()] + " " + timestamp.format("DD, YYYY")
 										let displayName = _this.escapeMentions(escapeMarkdown(e.message.nick || e.message.author.username || e.message.author.id))
 										let tag = _this.escapeMentions(escapeMarkdown(e.message.author.username+"#"+e.message.author.discriminator))
 
@@ -99,8 +104,9 @@ module.exports = class Quote extends Plugin {
 										.replace("[channelID]", e.channel.id)
 										.replace("[channelName]", _this.escapeMentions(escapeMarkdown(e.channel.name)))
 										.replace("[message]", contentLines.map(line => `>${line}\n`).join(""))
-										.replace("[messageTime]", timestamp)
-										.replace("[messageDate]", isoDate)
+										.replace("[messageTimestamp]", timestamp)
+										.replace("[messageTime]", displayTime)
+										.replace("[messageDate]", datePretty)
 										.replace("[auto]", quotedMessage)
 										
 										let chatbox = document.querySelector("textarea.textArea-2Spzkt.scrollbar-3dvm_9")
