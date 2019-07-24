@@ -25,7 +25,9 @@ module.exports = class QuoteSettings extends React.Component {
 								[channelMention] - Mentions the channel of the channel of the quoted message<br></br>
 								[channelID] - The ID of the channel of the quoted message<br></br>
 								[channelName] - The name of the channel of the quoted message<br></br>
+								[guildID] - The ID of the guild of the quoted message<br></br>
 								[message] - The quoted message<br></br>
+								[messageURL] - URL to the quoted message<br></br>
 								[messageDate] - The date when the quoted message was posted<br></br>
 								[messageTime] - The time when the quoted message was posted<br></br>
 								[messageTimestamp] - The timestamp (unformatted date and time) when the quoted message was posted<br></br>
@@ -42,24 +44,6 @@ module.exports = class QuoteSettings extends React.Component {
 				>
 					Quote Message Format
 				</TextArea>
-
-				{
-					// Kind of not needed but might add later
-					/* <SwitchItem
-					note={
-						<div>
-						{
-							"Should a new line be appended at the end of the above designed message? "
-						}
-						<b>(RECOMMENDED)</b>
-						</div>
-					}
-					value={this.props.getSetting("appendNewLine", true)}
-					onChange={() => this.props.toggleSetting("appendNewLine")}
-					>
-					Append New Line
-					</SwitchItem> */
-				}
 			</div>
 		)
 	}

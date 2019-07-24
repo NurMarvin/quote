@@ -64,12 +64,21 @@ module.exports = class Quote extends Plugin {
 										e.message.content = _this.escapeMentions(fixContent(e.message.content))
 										let contentLines = e.message.content.split("\n")
 										
+										console.log(e)
+
+										
+
+										let guildID = e.channel.guild_id;
+										let channelID = e.channel.id;
+										let messageID = e.message.id;
+
 										let timestamp = e.message.timestamp
 										let displayTime = timestamp.format("LT")
 										let date = new Date(timestamp)
 										let datePretty = monthNames[date.getMonth()] + " " + timestamp.format("DD, YYYY")
 										let displayName = _this.escapeMentions(escapeMarkdown(e.message.nick || e.message.author.username || e.message.author.id))
 										let tag = _this.escapeMentions(escapeMarkdown(e.message.author.username+"#"+e.message.author.discriminator))
+										let channelName = _this.escapeMentions(escapeMarkdown(e.channel.name))
 
 										let format = getSettings("format", "[auto]")
 
@@ -100,13 +109,16 @@ module.exports = class Quote extends Plugin {
 											"[userTag]",
 											tag
 										)
-										.replace("[channelMention]", `#${e.channel.name}`)
-										.replace("[channelID]", e.channel.id)
-										.replace("[channelName]", _this.escapeMentions(escapeMarkdown(e.channel.name)))
+										.replace("[channelMention]", guildID !== null ? `#${channelName}` : `<#${channelID}>`)
+										.replace("[channelID]", channelID)
+										.replace("[channelName]", channelName)
+										.replace("[guildID]", guildID)
 										.replace("[message]", contentLines.map(line => `>${line}\n`).join(""))
+										.replace("[messageID]", messageID)
 										.replace("[messageTimestamp]", timestamp)
 										.replace("[messageTime]", displayTime)
 										.replace("[messageDate]", datePretty)
+										.replace("[messageURL]", `https://discordapp.com/channels${guildID !== null ? `/${guildID}` : "/@me"}/${channelID}/${messageID}`)
 										.replace("[auto]", quotedMessage)
 										
 										let chatbox = document.querySelector("textarea.textArea-2Spzkt.scrollbar-3dvm_9")
