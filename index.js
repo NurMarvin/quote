@@ -109,13 +109,13 @@ module.exports = class Quote extends Plugin {
 										.replace("[channelID]", channelID)
 										.replace("[channelName]", channelName)
 										.replace("[guildID]", guildID)
-										.replace("[message]", contentLines.map(line => `> ${line}\n`).join(""))
 										.replace("[messageID]", messageID)
 										.replace("[messageTimestamp]", timestamp)
 										.replace("[messageTime]", displayTime)
 										.replace("[messageDate]", datePretty)
 										.replace("[messageURL]", `https://discordapp.com/channels${guildID !== null ? `/${guildID}` : "/@me"}/${channelID}/${messageID}`)
 										.replace("[auto]", quotedMessage)
+										.replace("[message]", contentLines.map(line => `> ${line}\n`).join(""))
 										
 										let chatbox = document.querySelector("textarea.textArea-2Spzkt.scrollbar-3dvm_9")
 										
