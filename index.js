@@ -82,7 +82,7 @@ module.exports = class Quote extends Plugin {
 											var quotedMessage = `> [${displayTime}] ${displayName}: ${e.message.content}\n`
 										} else {
 											var quotedMessage =
-												`>*${displayName} at ${displayTime}​:*\n`
+												`> *${displayName} at ${displayTime}​:*\n`
 												+contentLines.map(line => `> ${line}\n`).join("")
 										}
 
@@ -109,7 +109,7 @@ module.exports = class Quote extends Plugin {
 										.replace("[channelID]", channelID)
 										.replace("[channelName]", channelName)
 										.replace("[guildID]", guildID)
-										.replace("[message]", contentLines.map(line => `>${line}\n`).join(""))
+										.replace("[message]", contentLines.map(line => `> ${line}\n`).join(""))
 										.replace("[messageID]", messageID)
 										.replace("[messageTimestamp]", timestamp)
 										.replace("[messageTime]", displayTime)
