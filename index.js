@@ -60,6 +60,7 @@ module.exports = class Quote extends Plugin {
 									src: "https://image.flaticon.com/icons/svg/25/25418.svg",
 									alt: "Quote",
 									className: "quote-btn",
+									draggable: false,
 									onClick: () => {
 										e.message.content = _this.escapeMentions(fixContent(e.message.content))
 										let contentLines = e.message.content.split("\n")
