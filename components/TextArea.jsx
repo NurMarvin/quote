@@ -13,13 +13,6 @@ module.exports = class TextInput extends React.Component {
     return (
       <FormItem title={title} note={note}>
         <Area {...this.props} />
-        {(error || error === '') && (
-          <Text
-            className={'error-chiOuv marginTop8-1DLZ1n pc-error pc-marginTop8'}
-            color={'statusRed-21U8Tp'}
-            size={'small-29zrCQ size12-3R0845 height16-2Lv3qA'}
-          />
-        )}
       </FormItem>
     )
   }

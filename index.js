@@ -7,12 +7,12 @@ const { React, getModule, getModuleByDisplayName } = require("powercord/webpack"
 const Settings = require("./components/Settings")
 
 const monthNames = ["January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December"
+	"July", "August", "September", "October", "November", "December"
 ];
 
 Number.prototype.padLeft = function (base, chr) {
-  var len = String(base || 10).length - String(this).length + 1
-  return len > 0 ? new Array(len).join(chr || "0") + this : this
+	var len = String(base || 10).length - String(this).length + 1
+	return len > 0 ? new Array(len).join(chr || "0") + this : this
 }
 
 function escapeMarkdown(text) {
@@ -27,17 +27,21 @@ function fixContent(text) {
 module.exports = class Quote extends Plugin {
 	escapeMentions(text) {
 		return text.replace(/<@!?(\d+)>/g, (_, userID) => {
-			return "@​"+this.getUser(userID).tag
+			return "@​" + this.getUser(userID).tag
 		})
 	}
 
-	async startPlugin () {
+	async startPlugin() {
 		this.loadCSS(resolve(__dirname, "style.css"))
-		this.registerSettings("quote", "Quote", Settings)
-		
+		this.registerSettings("quote", "Quote", (props) =>
+			React.createElement(Settings, {
+				...props
+			})
+		)
+
 		const MessageContent = await getModuleByDisplayName("MessageContent")
 		this.getUser = (await getModule(["getUser"])).getUser
-		
+
 		const getSettings = (key, defaultValue) => {
 			return this.settings.get(key, defaultValue)
 		}
@@ -63,7 +67,7 @@ module.exports = class Quote extends Plugin {
 									onClick: () => {
 										e.message.content = _this.escapeMentions(fixContent(e.message.content))
 										let contentLines = e.message.content.split("\n")
-										
+
 										let guildID = e.channel.guild_id;
 										let channelID = e.channel.id;
 										let messageID = e.message.id;
@@ -73,7 +77,7 @@ module.exports = class Quote extends Plugin {
 										let date = new Date(timestamp)
 										let datePretty = monthNames[date.getMonth()] + " " + timestamp.format("DD, YYYY")
 										let displayName = _this.escapeMentions(escapeMarkdown(e.message.nick || e.message.author.username || e.message.author.id))
-										let tag = _this.escapeMentions(escapeMarkdown(e.message.author.username+"#"+e.message.author.discriminator))
+										let tag = _this.escapeMentions(escapeMarkdown(e.message.author.username + "#" + e.message.author.discriminator))
 										let channelName = _this.escapeMentions(escapeMarkdown(e.channel.name))
 
 										let format = getSettings("format", "[auto]")
@@ -83,50 +87,50 @@ module.exports = class Quote extends Plugin {
 										} else {
 											var quotedMessage =
 												`> *${displayName} at ${displayTime}​:*\n`
-												+contentLines.map(line => `> ${line}\n`).join("")
+												+ contentLines.map(line => `> ${line}\n`).join("")
 										}
 
 										let message = format
-										.replace(
-											"[userMention]",
-											"@"+tag
-										)
-										.replace(
-											"[userDisplayName]",
-											displayName
-										)
-										.replace("[userID]", e.message.author.id)
-										.replace("[username]", _this.escapeMentions(escapeMarkdown(e.message.author.username)))
-										.replace(
-											"[userDiscriminator]",
-											e.message.author.discriminator
-										)
-										.replace(
-											"[userTag]",
-											tag
-										)
-										.replace("[channelMention]", guildID !== null ? `#${channelName}` : `<#${channelID}>`)
-										.replace("[channelID]", channelID)
-										.replace("[channelName]", channelName)
-										.replace("[guildID]", guildID)
-										.replace("[messageID]", messageID)
-										.replace("[messageTimestamp]", timestamp)
-										.replace("[messageTime]", displayTime)
-										.replace("[messageDate]", datePretty)
-										.replace("[messageURL]", `https://discordapp.com/channels${guildID !== null ? `/${guildID}` : "/@me"}/${channelID}/${messageID}`)
-										.replace("[auto]", quotedMessage)
-										.replace("[message]", contentLines.map(line => `> ${line}\n`).join(""))
-										
+											.replace(
+												"[userMention]",
+												"@" + tag
+											)
+											.replace(
+												"[userDisplayName]",
+												displayName
+											)
+											.replace("[userID]", e.message.author.id)
+											.replace("[username]", _this.escapeMentions(escapeMarkdown(e.message.author.username)))
+											.replace(
+												"[userDiscriminator]",
+												e.message.author.discriminator
+											)
+											.replace(
+												"[userTag]",
+												tag
+											)
+											.replace("[channelMention]", guildID !== null ? `#${channelName}` : `<#${channelID}>`)
+											.replace("[channelID]", channelID)
+											.replace("[channelName]", channelName)
+											.replace("[guildID]", guildID)
+											.replace("[messageID]", messageID)
+											.replace("[messageTimestamp]", timestamp)
+											.replace("[messageTime]", displayTime)
+											.replace("[messageDate]", datePretty)
+											.replace("[messageURL]", `https://discordapp.com/channels${guildID !== null ? `/${guildID}` : "/@me"}/${channelID}/${messageID}`)
+											.replace("[auto]", quotedMessage)
+											.replace("[message]", contentLines.map(line => `> ${line}\n`).join(""))
+
 										let chatbox = document.querySelector("textarea.textArea-2Spzkt.scrollbar-3dvm_9")
-										
+
 										if (chatbox) {
 											if (chatbox.value !== "") {
 												chatbox.value = message + chatbox.value
 											} else {
 												chatbox.value = message
 											}
-											
-											getOwnerInstance(chatbox).handleChange({currentTarget: chatbox})
+
+											getOwnerInstance(chatbox).handleChange({ currentTarget: chatbox })
 										}
 
 										chatbox.focus()
@@ -142,8 +146,8 @@ module.exports = class Quote extends Plugin {
 			true
 		)
 	}
-	
-	pluginWillUnload () {
+
+	pluginWillUnload() {
 		uninject("quote-contents")
 		forceUpdateElement(".pc-message", true)
 	}
