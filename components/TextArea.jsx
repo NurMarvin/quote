@@ -6,8 +6,8 @@ const Area = AsyncComponent.from(getModuleByDisplayName('TextArea'))
 const Text = AsyncComponent.from(getModuleByDisplayName('Text'))
 
 module.exports = class TextInput extends React.Component {
-  render () {
-    const { children: title, note, error } = this.props
+  render() {
+    const { children: title, note } = this.props
     delete this.props.children
 
     return (
